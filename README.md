@@ -2,7 +2,7 @@
 
 Django project skeleton with Django Rest framework ready for Docker.
 
-# Quickstart in Development
+## Quickstart in Development
 
 ```
 docker-compose up -d
@@ -20,7 +20,7 @@ To create new app:
 docker-compose run restapi python manage.py startapp my-app project/apps/my-app
 ```
 
-# Production
+## Production
 
 Depending on what you use:
 
