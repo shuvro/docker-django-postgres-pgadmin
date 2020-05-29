@@ -1,0 +1,59 @@
+version: '3.6'
+services:
+    database:
+        image: postgres
+        environment:
+            POSTGRES_USER: django
+            POSTGRES_PASSWORD: django
+            PGDATA: /data/postgres
+        volumes:
+            - postgres:/data/postgres
+        ports:
+            - "5432:5432"
+        networks:
+            - django
+        restart: unless-stopped
+
+    pgadmin:
+        image: dpage/pgadmin4
+        environment:
+            PGADMIN_DEFAULT_EMAIL: lord@shuvro.me
+            PGADMIN_DEFAULT_PASSWORD: admin
+        volumes:
+            - pgadmin:/root/.pgadmin
+        ports:
+            - "5050:80"
+        networks:
+            - django
+        restart: unless-stopped
+
+    restapi:
+        build: ./restapi
+        command: python manage.py runserver 0.0.0.0:8000
+        volumes:
+            - ./restapi:/django
+        ports:
+            - "8000:8000"
+        links:
+            - database
+        environment:
+            DEBUG: "true"
+            DATABASE_NAME: django 
+            DATABASE_USER: django
+            DATABASE_PASSWORD: django
+            DATABASE_SERVICE_HOST: database
+            DATABASE_SERVICE_PORT: 5432
+        networks:
+            - django
+        depends_on:
+            - database
+            - pgadmin
+
+networks:
+    django:
+        driver: bridge
+
+volumes:
+    postgres:
+    pgadmin:
+
